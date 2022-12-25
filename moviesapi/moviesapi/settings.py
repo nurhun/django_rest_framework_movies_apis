@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'movies',
+    'rest_framework.authtoken', #Used to enable token authentication
 ]
 
 MIDDLEWARE = [

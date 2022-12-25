@@ -42,7 +42,7 @@ class TestMovieViewsPOST(APITestCase):
             "story_line": "hab'a a7kelak"
             }
             
-        res = self.client.post('/api/movie/', data)
+        res = self.client.post('/api/v1/movie/', data)
         # self.assertEqual(res.status_code, 201)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
@@ -54,14 +54,14 @@ class TestMovieViewsGET(TestSetUp):
         '''
         test MovieViewSet list method
         '''
-        res = self.client.get('/api/movie/')
+        res = self.client.get('/api/v1/movie/')
         # import pdb
         # pdb.set_trace()
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
     def test_list_movies_response_list_count(self):
-        res = self.client.get('/api/movie/')
+        res = self.client.get('/api/v1/movie/')
         self.assertEqual(Movie.objects.count(), 5)
 
 
@@ -70,7 +70,7 @@ class TestMovieViewsGET(TestSetUp):
         test MovieViewSet retrieve method
         '''
         for movie in self.movies:
-            res = self.client.get(f'/api/movie/{movie.id}/')
+            res = self.client.get(f'/api/v1/movie/{movie.id}/')
             self.assertEqual(str(movie), movie.title)   # tests __str__ method in model that should return self.title
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -81,7 +81,7 @@ class TestMovieViewsGET(TestSetUp):
         test MovieViewSet delete method
         '''
         for movie in self.movies:
-            res = self.client.delete(f'/api/movie/{movie.id}/')
+            res = self.client.delete(f'/api/v1/movie/{movie.id}/')
             
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -99,7 +99,7 @@ class TestMovieViewsGET(TestSetUp):
                 'year': movie.year,
                 'story_line': "--------------"
                 }
-            res = self.client.put(f'/api/movie/{movie.id}/', data)
+            res = self.client.put(f'/api/v1/movie/{movie.id}/', data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -111,6 +111,6 @@ class TestMovieViewsGET(TestSetUp):
         for movie in self.movies:
             # In patch, you don't have to pass all data fields, you need to pass only fields that will be modified.
             data = {'id': movie.id, 'year': 2000,'story_line': "--------------"}
-            res = self.client.patch(f'/api/movie/{movie.id}/', data)
+            res = self.client.patch(f'/api/v1/movie/{movie.id}/', data)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)

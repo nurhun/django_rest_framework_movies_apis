@@ -18,6 +18,7 @@ from django.urls import path, include
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
 from django.views.generic import TemplateView
+from rest_framework.authtoken.views import obtain_auth_token
 
 
 router = routers.DefaultRouter()
@@ -26,7 +27,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/api_schema/', get_schema_view(
+    path('api/v1/api_schema/', get_schema_view(
     title='API Schema',
     description='Guide for the REST API'
     ), name='api_schema'),
@@ -34,13 +35,17 @@ urlpatterns = [
     # Allow login for django users apart from /admin/ panel.
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-    # /api/movie/
-    path('api/', include('movies.urls')),
+    # /api/v1/movie/
+    path('api/v1/', include('movies.urls')),
 
 
-    path('api/docs/', TemplateView.as_view(
+    path('api/v1/docs/', TemplateView.as_view(
     template_name='docs.html',
     extra_context={'schema_url':'api_schema'}
     ), name='swagger-ui'),
-]
 
+    # gives us access to token auth
+    # curl -XPOST -F 'username=**your_username**' -F 'password=**your_password**' http://localhost:8000/api/v1/api-token-auth/
+    path('api/v1/api-token-auth/', obtain_auth_token),
+
+]
