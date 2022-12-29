@@ -2,7 +2,8 @@ from rest_framework.test import APITestCase, APIClient
 from .test_setup import TestSetUp
 from rest_framework import status
 from movies.models import Movie
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from users.models import CustomUser
 
 """
 test MovieViewSet all available methods:
@@ -27,11 +28,16 @@ class TestMovieViewsPOST(APITestCase):
         # This is because we have a project-level pemission IsAuthenticatedOrReadOnly.
         # OR
         # Inherent from TestSetUp() 
-        self.user = User.objects.create_user(
+        self.user = CustomUser.objects.create_user(
             username='testuser1', 
             password='testuser1_secret_password',
             email='testuser1@test.com'
         )
+        # self.user = User.objects.create_user(
+        #     username='testuser1', 
+        #     password='testuser1_secret_password',
+        #     email='testuser1@test.com'
+        # )
         self.client = APIClient()
         self.client.login(username=self.user.username, password="testuser1_secret_password")
 
