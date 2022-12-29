@@ -27,4 +27,3 @@ class Movie(
         return self.title
 
     year = models.PositiveIntegerField()
-    story_line = models.TextField(max_length=2000)

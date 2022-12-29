@@ -48,4 +48,7 @@ urlpatterns = [
     # curl -XPOST -F 'username=**your_username**' -F 'password=**your_password**' http://localhost:8000/api/v1/api-token-auth/
     path('api/v1/api-token-auth/', obtain_auth_token),
 
+    path('api/v1/users/', include('users.urls')),
+
+    path('ht/', include('health_check.urls')),
 ]
