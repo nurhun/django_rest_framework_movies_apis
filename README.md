@@ -2,7 +2,7 @@
 
 This is a dump app to list my favorite movies for demo projects purpose.
 
-![](dashboard.png)
+![](assets/dashboard_v1.png)
 
 <br/>
 
