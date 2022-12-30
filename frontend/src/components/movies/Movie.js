@@ -30,7 +30,7 @@ class Note extends Component {
         <p>
            <strong>Title: </strong> {note.title} <br/>
            <strong>Year: </strong> {note.year} <br/>
-           <strong>Story Line: </strong> {note.description} <br/>
+           <strong>Storyline: </strong> {note.description} <br/>
           {/* (id:{note.id}) {note.title} */}
         </p>
         <Button variant="secondary" size="sm" onClick={this.onUpperCaseClick}>

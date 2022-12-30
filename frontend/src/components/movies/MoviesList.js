@@ -27,7 +27,7 @@ class NotesList extends Component {
     // console.log(items.)
     return (
       <div>
-        <h2>Movies</h2>
+        <h2>My favorite movies 	&#10084;&#65039;</h2>
         {items}
         <hr /> {/* a */}
       </div>

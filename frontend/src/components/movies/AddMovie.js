@@ -53,7 +53,7 @@ class AddNote extends Component {
             />
           </Form.Group>
           <Form.Group controlId="descriptionId">
-            <Form.Label>Story Line</Form.Label>
+            <Form.Label>Storyline</Form.Label>
             <Form.Control
               type = "text"
               name="description"
