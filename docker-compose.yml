@@ -7,19 +7,23 @@ services:
         #     context: ./
         #     dockerfile: ./docker/backend/Dockerfile
         command:  ["-c" , "python manage.py makemigrations && python manage.py migrate || true"]
+        environment:
+            - SECRET_KEY="classified"
 
     backend:
         container_name: moviesapis_django_rest
         restart: always
-        image: nurhun/django_rest_framework_movies_apis_w_react_frontend_backend:v0.1.0
-        # build:
-        #     context: ./
-        #     dockerfile: ./docker/backend/Dockerfile
+        # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_backend:v0.1.0
+        build:
+            context: ./
+            dockerfile: ./docker/backend/Dockerfile
         command: 
         - "-c"
         - |
             python manage.py collectstatic --noinput
-            gunicorn moviesapi.wsgi --bind=0.0.0.0:8000 --reload --workers=2 --threads=2 --timeout=120 --log-level=warning
+            gunicorn moviesapi.wsgi --bind=0.0.0.0:8000 --reload --workers=2 --threads=2 --timeout=120 --log-level=Debug
+        environment:
+            - SECRET_KEY=classified
         ports:
             - 8000:8000
         depends_on:
@@ -35,7 +39,8 @@ services:
     nginx:
         container_name: moviesapis_frontend_nginx
         restart: always
-        image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.1.0
+        # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.1.0
+        image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.2.0
         # build:
         #     context: ./
         #     dockerfile: ./docker/nginx/Dockerfile

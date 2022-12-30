@@ -3,8 +3,6 @@ FROM node:13.12.0-alpine as BUILD
 
 WORKDIR /app
 COPY ./frontend/ /app
-RUN pwd
-RUN ls -l
 RUN npm ci --silent
 RUN npm run build
 
