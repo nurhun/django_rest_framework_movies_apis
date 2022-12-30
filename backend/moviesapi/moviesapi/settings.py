@@ -29,8 +29,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
-# ALLOWED_HOSTS = ['0.0.0.0']
+# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = ["*"]
 # ALLOWED_HOSTS = []
 
 
@@ -179,12 +179,14 @@ REST_FRAMEWORK = {
     # 'PAGE_SIZE': 10
 }
 
-CORS_ALLOWED_ORIGINS = [
-    # os.environ.get("FRONTEND_HTTPs"),
-    os.environ.get("FRONTEND_HTTP"),
-    # "http://localhost:3000",
-    # "http://127.0.0.1:3000"
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     os.environ.get("FRONTEND_HTTP"),
+#     "*"
+#     # "http://localhost:3000",
+#     # "http://127.0.0.1:3000"
+# ]
 
 
 # Points to the custom user model

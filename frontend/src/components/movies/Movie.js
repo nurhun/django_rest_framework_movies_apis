@@ -33,10 +33,12 @@ class Note extends Component {
            <strong>Storyline: </strong> {note.description} <br/>
           {/* (id:{note.id}) {note.title} */}
         </p>
-        <Button variant="secondary" size="sm" onClick={this.onUpperCaseClick}>
+        <Button variant="warning" size="sm" onClick={this.onUpperCaseClick}>
+        {/* <Button variant="secondary" size="sm" onClick={this.onUpperCaseClick}> */}
           Upper case
         </Button>{" "}
-        <Button variant="info" size="sm" onClick={this.onLowerCaseClick}>
+        <Button variant="dark" size="sm" onClick={this.onLowerCaseClick}>
+        {/* <Button variant="info" size="sm" onClick={this.onLowerCaseClick}> */}
           Lower case
         </Button>{" "}
         <Button variant="danger" size="sm" onClick={this.onDeleteClick}>

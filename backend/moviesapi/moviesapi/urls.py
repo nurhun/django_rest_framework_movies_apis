@@ -19,12 +19,16 @@ from rest_framework import routers
 from rest_framework.schemas import get_schema_view
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
+from django.http import HttpResponse
 
 
 router = routers.DefaultRouter()
 
 
 urlpatterns = [
+
+    path('', lambda request: HttpResponse('Hello World!'), name='hello_world'),
+
     path('admin/', admin.site.urls),
 
     path('api/v1/api_schema/', get_schema_view(
