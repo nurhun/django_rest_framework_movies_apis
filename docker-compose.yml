@@ -48,7 +48,9 @@ services:
         # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.1.0
 
         # warning/Yellow, dark/Black & danger/Red version.
-        image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.2.0
+        # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.2.0
+        
+        image: gcr.io/nifty-bird-321722/django_rest_framework_movies_apis_w_react_frontend-nginx:run-template
         
         # build:
         #     context: ./
