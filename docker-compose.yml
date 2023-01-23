@@ -8,22 +8,25 @@ services:
         #     dockerfile: ./docker/backend/Dockerfile
         command:  ["-c" , "python manage.py makemigrations && python manage.py migrate || true"]
         environment:
-            - SECRET_KEY="classified"
+            - SECRET_KEY=${SECRET_KEY}
+
 
     backend:
         container_name: moviesapis_django_rest
         restart: always
-        # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_backend:v0.1.0
-        build:
-            context: ./
-            dockerfile: ./docker/backend/Dockerfile
-        command: 
+        image: nurhun/django_rest_framework_movies_apis_w_react_frontend_backend:v0.1.0
+
+        # build:
+        #     context: ./
+        #     dockerfile: ./docker/backend/Dockerfile
+        command:
         - "-c"
         - |
             python manage.py collectstatic --noinput
+            # Considering 1 core
             gunicorn moviesapi.wsgi --bind=0.0.0.0:8000 --reload --workers=2 --threads=2 --timeout=120 --log-level=Debug
         environment:
-            - SECRET_KEY=classified
+            - SECRET_KEY=${SECRET_KEY}
         ports:
             - 8000:8000
         depends_on:
@@ -36,16 +39,34 @@ services:
             retries: 5
             start_period: 3s
 
+
     nginx:
         container_name: moviesapis_frontend_nginx
         restart: always
+
+        # # secondary/Grey, info/Light Blue, danger/Red version.
         # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.1.0
-        image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.2.0
+
+        # warning/Yellow, dark/Black & danger/Red version.
+        # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.2.0
+        
+        image: gcr.io/nifty-bird-321722/django_rest_framework_movies_apis_w_react_frontend-nginx:run-template
+        
         # build:
         #     context: ./
         #     dockerfile: ./docker/nginx/Dockerfile
         ports:
             - 80:80
+        environment:
+            # Local backend
+            - REACT_APP_AXIOS_DEVELOPMENT_BASEURL=http://127.0.0.1:8000
+            #   # Backend deployed on Cloud RUN
+            # - REACT_APP_AXIOS_PRODUCTION_BASEURL=${REACT_APP_AXIOS_PRODUCTION_BASEURL}
+            # API Gateway
+            - REACT_APP_AXIOS_PRODUCTION_BASEURL=${REACT_APP_AXIOS_PRODUCTION_BASEURL}
+            - NGINX_PORT=${NGINX_PORT}
+            - NGINX_SERVER_NAME=${NGINX_SERVER_NAME}
+            - NGINX_PROXY_PASS=${NGINX_PROXY_PASS}
         depends_on:
             backend:
                 condition: service_healthy
