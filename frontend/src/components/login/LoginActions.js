@@ -1,22 +1,25 @@
-import axios from "axios";
+// import axios from "axios";
 import { push } from "connected-react-router";
 import { toast } from "react-toastify";
 import { SET_TOKEN, SET_CURRENT_USER, UNSET_CURRENT_USER } from "./LoginTypes";
-import { setAxiosAuthToken, toastOnError } from "../../utils/Utils";
+import { toastOnError } from "../../utils/Utils";
+import { setAxiosAuthToken } from "../../utils/Axios";
+import axiosInstance from "../../utils/Axios";
 
 export const login = (userData, redirectTo) => dispatch => {
-  axios
-    .post("/api/v1/users/auth/login/", userData)
+  axiosInstance
+    // .post("/api/token", JSON.stringify(userData))
+    .post("/api/token", userData)
     .then(response => {
       // console.log(response.data);
-      // console.log(response.data.key);
-      // const { auth_token } = response.data;
-      setAxiosAuthToken(response.data.key);
-      // setAxiosAuthToken(auth_token);
-      dispatch(setToken(response.data.key));
-      // dispatch(setToken(auth_token));
-      dispatch(getCurrentUser(response.data.key, redirectTo));
-      // dispatch(getCurrentUser(auth_token, redirectTo));
+      // console.log(response.data.access);
+      // console.log(typeof response.data.access)
+
+      const auth_token = response.data.access;
+
+      setAxiosAuthToken(response.data);
+      dispatch(setToken(auth_token));
+      dispatch(getCurrentUser(auth_token, redirectTo));
     })
     .catch(error => {
       dispatch(unsetCurrentUser());
@@ -24,14 +27,12 @@ export const login = (userData, redirectTo) => dispatch => {
     });
 };
 
+
+
 export const getCurrentUser = (auth_token, redirectTo) => dispatch => {
-  // console.log(auth_token)
-  axios
-    .get("/api/v1/users/auth/user/",
-    {
-      // headers: { Authorization: `Token ee7c137a04978ad4b9a073a6ce4cab1bdea4c531` }
-      headers: { Authorization: `Token ${auth_token}` }
-    })
+  axiosInstance
+    .get("/api/v1/users/auth/user",
+    )
     .then(response => {
       const user = {
         username: response.data.username,
@@ -69,8 +70,8 @@ export const setCurrentUser = (user, redirectTo) => dispatch => {
 };
 
 export const setToken = token => dispatch => {
-  setAxiosAuthToken(token);
-  localStorage.setItem("token", token);
+  // setAxiosAuthToken(token);
+  localStorage.setItem("access_token", token);
   dispatch({
     type: SET_TOKEN,
     payload: token
@@ -78,17 +79,18 @@ export const setToken = token => dispatch => {
 };
 
 export const unsetCurrentUser = () => dispatch => {
-  setAxiosAuthToken("");
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+  // setAxiosAuthToken("");
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  axiosInstance.defaults.headers['Authorization'] = null;
   dispatch({
     type: UNSET_CURRENT_USER
   });
 };
 
 export const logout = () => dispatch => {
-  axios
-    .post("/api/v1/users/auth/logout/")
+  axiosInstance
+    .post("/api/v1/users/auth/logout")
     .then(response => {
       dispatch(unsetCurrentUser());
       dispatch(push("/"));

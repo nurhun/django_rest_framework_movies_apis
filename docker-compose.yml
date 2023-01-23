@@ -14,7 +14,8 @@ services:
     backend:
         container_name: moviesapis_django_rest
         restart: always
-        image: nurhun/django_rest_framework_movies_apis_w_react_frontend_backend:v0.1.0
+        # image: nurhun/django_rest_framework_movies_apis_w_react_frontend_backend:v0.1.0
+        image: gcr.io/nifty-bird-321722/django_rest_framework_movies_apis_w_react_frontend_backend:run-v8
 
         # build:
         #     context: ./

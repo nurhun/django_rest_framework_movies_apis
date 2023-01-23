@@ -19,8 +19,8 @@ const Root = ({ children, initialState = {} }) => {
     applyMiddleware(...middleware)
   );
 
-  if (!isEmpty(localStorage.getItem("token"))) {
-    store.dispatch(setToken(localStorage.getItem("token")));
+  if (!isEmpty(localStorage.getItem("access_token"))) {
+    store.dispatch(setToken(localStorage.getItem("access_token")));
   }
   if (!isEmpty(localStorage.getItem("user"))) {
     const user = JSON.parse(localStorage.getItem("user"));

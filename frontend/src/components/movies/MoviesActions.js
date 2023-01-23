@@ -1,10 +1,11 @@
-import axios from "axios";
+// import axios from "axios";
 import { toastOnError } from "../../utils/Utils";
 import { GET_MOVIES, ADD_MOVIE, DELETE_MOVIE, UPDATE_MOVIE } from "./MoviesTypes";
+import axiosInstance from "../../utils/Axios";
 
 export const getNotes = () => dispatch => {
-  axios
-    .get("/api/v1/movie/")
+  axiosInstance
+    .get("/api/v1/movie")
     .then(response => {
       dispatch({
         type: GET_MOVIES,
@@ -17,8 +18,8 @@ export const getNotes = () => dispatch => {
 };
 
 export const addNote = note => dispatch => {
-  axios
-    .post("/api/v1/movie/", note)
+  axiosInstance
+    .post("/api/v1/movie", note)
     .then(response => {
       dispatch({
         type: ADD_MOVIE,
@@ -31,8 +32,8 @@ export const addNote = note => dispatch => {
 };
 
 export const deleteNote = id => dispatch => {
-  axios
-    .delete(`/api/v1/movie/${id}/`)
+  axiosInstance
+    .delete(`/api/v1/movie${id}`)
     .then(response => {
       dispatch({
         type: DELETE_MOVIE,
@@ -45,8 +46,8 @@ export const deleteNote = id => dispatch => {
 };
 
 export const updateNote = (id, note) => dispatch => {
-  axios
-    .patch(`/api/v1/movie/${id}/`, note)
+  axiosInstance
+    .patch(`/api/v1/movie${id}`, note)
     .then(response => {
       dispatch({
         type: UPDATE_MOVIE,

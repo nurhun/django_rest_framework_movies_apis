@@ -50,8 +50,10 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'allauth',
     'rest_framework.authtoken', # Used to enable token authentication
+    'rest_framework_simplejwt',
     'corsheaders', # Adds Cross-Origin Resource Sharing (CORS) headers to responses. This allows in-browser requests to your Django application from other origins.
-    'health_check', 
+    'health_check',
+    'drf_yasg',     # Used to get openAPI spec 2.0
 ]
 
 MIDDLEWARE = [
@@ -150,8 +152,10 @@ REST_FRAMEWORK = {
     #     'rest_framework_json_api.parsers.JSONParser',
     # ),
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+    #     # 'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+    #     # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         # project-level permission 
@@ -159,10 +163,10 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticated',
         # 'rest_framework.permissions.AllowAny',
     ],
-    # 'DEFAULT_RENDERER_CLASSES': [
-    #     'rest_framework.renderers.JSONRenderer',
-    #     'rest_framework.renderers.BrowsableAPIRenderer',
-    # ]
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        # 'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
     # 'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
     # 'DEFAULT_FILTER_BACKENDS': (
     #     'rest_framework_json_api.filters.QueryParameterValidationFilter',
@@ -180,6 +184,14 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+from corsheaders.defaults import default_headers
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "x-api-key",
+]
 
 # CORS_ALLOWED_ORIGINS = [
 #     os.environ.get("FRONTEND_HTTP"),
@@ -207,3 +219,16 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
+
+# In Google Cloud Run, it provides only https url, then, we need to make DRF handle https as well.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Tring this to bypass ERR_TOO_MANY_REDIRECTS with API Gateway.
+APPEND_SLASH = False
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
