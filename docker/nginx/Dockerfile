@@ -12,8 +12,6 @@ FROM nginx:1.23-alpine
 
 COPY --from=BUILD /app/build /usr/share/nginx/html
 COPY ./backend/moviesapi/django_static /usr/src/static
-# COPY ./docker/nginx/app.conf /etc/nginx/conf.d/
-# COPY ./docker/nginx/templates/default.conf.template /etc/nginx/templates/
 COPY ./docker/nginx/templates /etc/nginx/templates
 
 CMD ["nginx", "-g", "daemon off;"]
