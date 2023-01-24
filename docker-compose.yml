@@ -55,6 +55,10 @@ services:
         # build:
         #     context: ./
         #     dockerfile: ./docker/nginx/Dockerfile
+        #     # ENVs need to be injected in the compile/build time not in the runtime.
+        #     args:
+        #         - REACT_APP_AXIOS_DEVELOPMENT_BASEURL=${REACT_APP_AXIOS_DEVELOPMENT_BASEURL}
+        #         - REACT_APP_AXIOS_PRODUCTION_BASEURL=${REACT_APP_AXIOS_PRODUCTION_BASEURL}
         ports:
             - 80:80
         environment:
