@@ -4,6 +4,11 @@ env:
   variables:
     BACKEND_REPO_NAME: "django_rest_framework_movies_apis_w_react_frontend_backend"
     FRONTEND_REPO_NAME: "django_rest_framework_movies_apis_w_react_frontend_nginx"
+    NGINX_PORT: "80"
+    NGINX_SERVER_NAME: "_"
+    NGINX_PROXY_PASS: ""
+    REACT_APP_AXIOS_PRODUCTION_BASEURL: ""
+    REACT_APP_AXIOS_DEVELOPMENT_BASEURL: "http://127.0.0.1:8000"
   secrets-manager:
     AWS_DEFAULT_REGION: "AWS_DEFAULT_REGION:AWS_DEFAULT_REGION"
     AWS_ACCOUNT_ID: "AWS_ACCOUNT_ID:AWS_ACCOUNT_ID"
@@ -23,9 +28,10 @@ phases:
     commands:
       - echo Build started on `date`
       # - LAST_COMMIT=`curl -s -u "nurhun:$GITHUB_TOKEN" -H "Accept:application/vnd.github.sha" https://api.github.com/repos/nurhun/XXXXXXRepo_nameXXXXX/commits/XXXXBranch_nameXXXXX | cut -c-7`
+      - echo $CODEBUILD_WEBHOOK_BASE_REF
       - LAST_COMMIT=`git rev-parse --short $CODEBUILD_WEBHOOK_BASE_REF`
       - echo images tag will be $LAST_COMMIT
-      # TODO: build when getting new tag release no "release vx.x.x" 
+      # TODO: build when getting new tag release no "release vx.x.x"
       - echo Building the Backend docker image...
       - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT -f docker/backend/Dockerfile
       - echo Building the NGINX docker image...
