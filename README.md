@@ -46,11 +46,11 @@ This is a dump app to list my favorite movies for demo projects purpose.
     - Use below credentials:
 >       username: admin
 >       password: admin
->       email:    admin@admin.com
 Or create your own users.
 
 <br/>
 
 #### TODO
-- JWT authentication.
 - Unit tests.
+
+#### This branch is dedicated for AWS CodeBuild CI
