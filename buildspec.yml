@@ -32,15 +32,14 @@ phases:
       - LAST_COMMIT=`git rev-parse --short $CODEBUILD_WEBHOOK_BASE_REF`
       - echo images tag will be $LAST_COMMIT
       # TODO: build when getting new tag release no "release vx.x.x"
-      - echo Building the Backend docker image...
-      - ls $PWD/docker/backend/
-      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT -f .
+      # - echo Building the Backend docker image...
+      # - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT -f .
       - echo Building the NGINX docker image...
       - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$FRONTEND_REPO_NAME:$LAST_COMMIT -f ./DockerfileNGINX .
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Backend docker image..
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT
+      # - echo Pushing the Backend docker image..
+      # - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT
       - echo Pushing the NGINX docker image..
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$FRONTEND_REPO_NAME:$LAST_COMMIT
