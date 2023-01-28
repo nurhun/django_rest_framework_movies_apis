@@ -33,10 +33,10 @@ phases:
       - echo images tag will be $LAST_COMMIT
       # TODO: build when getting new tag release no "release vx.x.x"
       - echo Building the Backend docker image...
-      - ls ./docker/backend/
-      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT -f ./docker/backend/
+      - ls $PWD/docker/backend/
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT -f $PWD/docker/backend/Dockerfile
       - echo Building the NGINX docker image...
-      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$FRONTEND_REPO_NAME:$LAST_COMMIT -f ./docker/nginx/
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$FRONTEND_REPO_NAME:$LAST_COMMIT -f ./docker/nginx/Dockerfile
   post_build:
     commands:
       - echo Build completed on `date`
