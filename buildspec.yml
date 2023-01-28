@@ -1,0 +1,39 @@
+version: 0.2
+
+env:
+  variables:
+    BACKEND_REPO_NAME: "django_rest_framework_movies_apis_w_react_frontend_backend"
+    FRONTEND_REPO_NAME: "django_rest_framework_movies_apis_w_react_frontend_nginx"
+  secrets-manager:
+    AWS_DEFAULT_REGION: "AWS_DEFAULT_REGION:AWS_DEFAULT_REGION"
+    AWS_ACCOUNT_ID: "AWS_ACCOUNT_ID:AWS_ACCOUNT_ID"
+    GITHUB_TOKEN: "GITHUB_TOKEN:GITHUB_TOKEN"   # key:value pair secret.
+    # aws secretsmanager create-secret --name PRIVATE_KEY --secret-string file://vault_machine.pem
+    PRIVATE_KEY: PRIVATE_KEY    # private_key.pem secret created from file "Plaintext" with no key.
+    # REMOTE_HOST: "REMOTE_HOST:REMOTE_HOST"
+    # REMOTE_USER: "REMOTE_USER:REMOTE_USER"
+
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - docker login -u AWS -p $(aws ecr get-login-password --region $AWS_DEFAULT_REGION) $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      # - LAST_COMMIT=`curl -s -u "nurhun:$GITHUB_TOKEN" -H "Accept:application/vnd.github.sha" https://api.github.com/repos/nurhun/XXXXXXRepo_nameXXXXX/commits/XXXXBranch_nameXXXXX | cut -c-7`
+      - LAST_COMMIT=`git rev-parse --short $CODEBUILD_WEBHOOK_BASE_REF`
+      - echo images tag will be $LAST_COMMIT
+      # TODO: build when getting new tag release no "release vx.x.x" 
+      - echo Building the Backend docker image...
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT -f docker/backend/Dockerfile
+      - echo Building the NGINX docker image...
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$FRONTEND_REPO_NAME:$LAST_COMMIT -f docker/nginx/Dockerfile
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Backend docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT
+      - echo Pushing the NGINX docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$FRONTEND_REPO_NAME:$LAST_COMMIT
