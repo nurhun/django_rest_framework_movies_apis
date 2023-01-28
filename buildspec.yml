@@ -39,7 +39,7 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Backend docker image...
+      - echo Pushing the Backend docker image..
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$BACKEND_REPO_NAME:$LAST_COMMIT
-      - echo Pushing the NGINX docker image...
+      - echo Pushing the NGINX docker image..
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$FRONTEND_REPO_NAME:$LAST_COMMIT
