@@ -27,3 +27,22 @@ spec:
   ports:
   - port: 80
     targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-v1
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: movies.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-v1
+                port:
+                  number: 80
