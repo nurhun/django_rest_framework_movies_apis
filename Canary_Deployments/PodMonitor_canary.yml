@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: canary
+  namespace: app
+spec:
+  # pod label selectors.
+  selector:
+    matchLabels:
+      version: v2
+  # Selector to select which namespaces the Endpoints objects are discovered from.
+  namespaceSelector:
+    matchNames:
+    - app
+  podMetricsEndpoints:
+  - path: /metrics
+    port: http-metrics
+

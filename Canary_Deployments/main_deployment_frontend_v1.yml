@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: v1
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9113'
+    spec:
+      containers:
+        - name: frontend-v1
+          image: nurhun/django_rest_framework_movies_apis_w_react_frontend_nginx:v0.1.0
+          command:
+            - "/bin/sh"
+            - "-c"
+            - | 
+                sed -i 's|include /etc/nginx/conf\.d/\*\.conf;|include /tmp/nginx/conf.d/\*\.conf;|' /etc/nginx/nginx.conf
+                sed -i 's/#gzip  on;/gzip  on;/' /etc/nginx/nginx.conf
+                sed -i '/gzip  on;/a\    gzip_types text/plain text/xml text/css application/json application/javascript application/xml application/xml+rss text/javascript image/svg+xml;' /etc/nginx/nginx.conf
+                nginx -g 'daemon off;'
+          ports:
+            - containerPort: 80
+          env:
+            - name: NGINX_ENVSUBST_OUTPUT_DIR
+              value: "/tmp/nginx/conf.d/"
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /tmp/nginx/conf.d/default.conf
+              #  if the nginx-config volume contains multiple configuration files, but you are only interested in using the default.conf file, you can use subPath to point to that specific file within the volume.
+              subPath: default.conf
+        - name: nginx-exporter
+          image: 'nginx/nginx-prometheus-exporter:0.10.0'
+          args:
+            - '-nginx.scrape-uri=http://localhost/nginx_status'
+          resources:
+            limits:
+              memory: 128Mi
+              cpu: 500m
+          ports:
+            - name: http-metrics
+              containerPort: 9113
+      volumes:
+        - name: nginx-config
+          configMap:
+            # Defines permissions in octal notation for files and directories within the ConfigMap volume.
+            # In this case, 420 in octal translates to 0644 in standard Unix file permission notation.
+            # This permission setting means that the files will be readable and writable by the owner and readable by others.
+            defaultMode: 420
+            name: nginx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-v1-main
+spec:
+  selector:
+    app: frontend
+    version: v1
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  - port: 9113
+    targetPort: http-metrics
+    name: http-metrics
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-v1-main
+spec:
+  ingressClassName: nginx
+  rules:
+    # - host: movies.info
+    # - host: 54.147.39.190.nip.io
+    - host: 44.219.91.214.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-v1-main
+                port:
+                  number: 80

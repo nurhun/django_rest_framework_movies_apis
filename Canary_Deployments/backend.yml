@@ -1,3 +1,12 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secretkey
+type: Opaque
+data:
+  SECRET_KEY: Y2xhc3NpZmllZA==
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,11 +46,3 @@ spec:
   ports:
   - port: 80
     targetPort: 8000
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: secretkey
-type: Opaque
-data:
-  SECRET_KEY: Y2xhc3NpZmllZA==

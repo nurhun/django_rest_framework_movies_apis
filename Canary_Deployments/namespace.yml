@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app
+  labels:
+    # This will allow Prometheus to scrape PodMonitor, ServiceMonitor, probeSelector, PrometheusRules, 
+    prometheus: "true"
